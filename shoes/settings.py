@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ROOT = 'http://127.0.0.1:8000'
+ROOT = 'http://193.105.234.170:8001'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'ix5n51=3top59^slsjl)o!l^0s9@o^9i)6tu*!5a3i3qs18a#-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['193.105.234.170:8001']
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080"
+    "http://193.105.234.170"
 ]
 
 MIDDLEWARE = [
