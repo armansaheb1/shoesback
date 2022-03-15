@@ -1,6 +1,8 @@
+from email.policy import default
+from pickle import TRUE
 from django.shortcuts import render
-from .serializers import ItemSerializer, MaterialSerializer, PartSerializer, PatternSerializer
-from .models import Item, ItemMaterials, Material , Part, Pattern
+from .serializers import CategorySerializer, ItemMaterialsSerializer, ItemSerializer, MaterialSerializer, PartSerializer, PatternSerializer
+from .models import Category, Item, ItemMaterials, Material , Part, Pattern
 from django.http import HttpResponse , Http404 
 from rest_framework.views import APIView 
 from rest_framework.response import Response
@@ -37,20 +39,26 @@ class item(APIView):
 
     def get_object(self , id):
         try:
-            return 
+            return Item.objects.filter(id = id)
         except Item.DoesNotExist:
             return Http404
 
+    def get(self , request , id , format = None):
+        query = self.get_object(id)
+        serializer = ItemSerializer(query , many=True)
+        return Response(serializer.data)
+
     def put(self , request , id , format = None):
-        query = Item.objects.get(id)
-        serializer = ItemSerializer(query[0],  data = request.data)
+        query = Item.objects.get(id = id)
+        serializer = ItemSerializer(query,  data = request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def delete(self , request, id , format = None):
-        query = Item.objects.get(id)
-        query[0].delete()
+        query = Item.objects.get(id = id)
+        query.delete()
+        return Response(status=status.HTTP_201_CREATED)
 
     def post(self , request , format = None):
         serializer = ItemSerializer(data = request.data)
@@ -64,20 +72,24 @@ class part(APIView):
         serializer = PartSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
+            query = Part.objects.filter(item = Item.objects.get(id = request.data['item']))
+            serializer = PartSerializer(query , many = True)
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(status= status.HTTP_404_NOT_FOUND)
 
     def put(self , request , id , format = None):
-        query = Part.objects.get(id)
-        serializer = PartSerializer(query[0],  data = request.data)
+        query = Part.objects.get(id = id)
+        serializer = PartSerializer(query,  data = request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def delete(self , request, id , format = None):
-        query = Part.objects.get(id)
-        query[0].delete()
+        query = Part.objects.get(id = id)
+        query.delete()
+        return Response(status=status.HTTP_201_CREATED)
         
 class parts(APIView):
 
@@ -94,6 +106,17 @@ class parts(APIView):
 
 class material(APIView):
 
+    def get_object(self):
+        try:
+            return Material.objects.all()
+        except Material.DoesNotExist:
+            return Http404
+            
+    def get(self , request , format = None):
+        query = self.get_object()
+        serializer = MaterialSerializer(query , many=True)
+        return Response(serializer.data)
+
     def post(self , request , format = None):
         serializer = MaterialSerializer(data = request.data)
         if serializer.is_valid():
@@ -103,21 +126,22 @@ class material(APIView):
             return Response(status= status.HTTP_404_NOT_FOUND)
 
     def put(self , request , id , format = None):
-        query = Material.objects.get(id)
-        serializer = MaterialSerializer(query[0],  data = request.data)
+        query = Material.objects.get(id = id)
+        serializer = MaterialSerializer(query,  data = request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def delete(self , request, id , format = None):
-        query = Material.objects.get(id)
-        query[0].delete()
+        query = Material.objects.get(id = id)
+        query.delete()
+        return Response(status=status.HTTP_201_CREATED)
 
 class materials(APIView):
 
     def get_object(self , id):
         try:
-            return Material.objects.filter(part = id)
+            return Material.objects.filter(id = id)
         except Material.DoesNotExist:
             return Http404
             
@@ -127,7 +151,22 @@ class materials(APIView):
         return Response(serializer.data)
 
 
+
 class pattern(APIView):
+
+
+    def get_object(self):
+        try:
+            return Pattern.objects.all()
+        except Pattern.DoesNotExist:
+            return Http404
+            
+    def get(self , request , format = None):
+        query = self.get_object()
+        serializer = PatternSerializer(query , many=True)
+        return Response(serializer.data)
+
+
 
     def post(self , request , format = None):
         serializer = PatternSerializer(data = request.data)
@@ -139,15 +178,16 @@ class pattern(APIView):
             return Response(serializer.errors,status= status.HTTP_404_NOT_FOUND)
 
     def put(self , request , id , format = None):
-        query = Pattern.objects.get(id)
-        serializer = PatternSerializer(query[0],  data = request.data)
+        query = Pattern.objects.get(id = id)
+        serializer = PatternSerializer(query,  data = request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def delete(self , request, id , format = None):
-        query = Pattern.objects.get(id)
-        query[0].delete()
+        query = Pattern.objects.get(id = id)
+        query.delete()
+        return Response(status=status.HTTP_201_CREATED)
 
 class patterns(APIView):
 
@@ -175,10 +215,32 @@ class itemparts(APIView):
         serializer = PartSerializer(query , many=True)
         return Response(serializer.data)
 
+class category(APIView):
+
+    def get_object(self):
+        try:
+            return Category.objects.all()
+        except Part.DoesNotExist:
+            return Http404
+            
+    def get(self , request , format = None):
+        query = self.get_object()
+        serializer = CategorySerializer(query , many=True)
+        return Response(serializer.data)
+
+    def post(self , request , format = None):
+        serializer = CategorySerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status= status.HTTP_404_NOT_FOUND)
+
 class itemmaterials(APIView):
             
     def get(self , request , id , format = None):
-        parts = Part.objects.filter(item = Item.objects.get(id = id))
+        mainitem = Item.objects.get(id = id)
+        parts = Part.objects.filter(item = mainitem)
         partslist = []
         materialslist = []
         patternslist  = {}
@@ -189,11 +251,20 @@ class itemmaterials(APIView):
                 patterns = Pattern.objects.filter(material = itemm)
                 patternslist  = {}
                 for itemmm in patterns:
-                    if itemmm.type == 'color':
-                        patternslist[itemmm.name] = {'code': itemmm.color , 'shininess' : itemm.shininess}
-                    else:
-                        patternslist[itemmm.name] = {'pic': itemmm.get_pic() , 'shininess' : itemm.shininess}
+                        patternslist[itemmm.name] = {'code': itemmm.get_color(), 'icon': itemmm.get_icon(), 'pic': itemmm.get_pic() , 'shininess' : itemmm.shininess}
                 materialslist.append({'name' :  itemm.name , 'pic': itemm.get_map() , 'colors': patternslist})
-            partslist.append({'name': item.name , 'bump': materialslist})
+                defa = {'code': item.default.get_color(), 'icon': itemmm.get_icon(), 'pic': item.default.get_pic()  , 'shininess' : item.default.shininess}
+            partslist.append({'name': item.name , 'bump': materialslist , 'model': item.get_model() , 'default' : defa , 'patina': mainitem.patina, 'patinad': mainitem.patinad ,'bumpmap': item.get_map()})
         print(partslist)
         return Response(partslist)
+
+    def post(self , request , format = None):
+        serializer = ItemMaterialsSerializer(data = request.data)
+        if serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors,status= status.HTTP_404_NOT_FOUND)
+    def put(self , request , format = None):
+        query = ItemMaterials.objects.get(part = request.data['part'])
+        

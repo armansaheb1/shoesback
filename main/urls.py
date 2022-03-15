@@ -11,6 +11,7 @@ urlpatterns = [
     path('items' , views.items.as_view() , name='items'),
     path('item' , views.item.as_view() , name='item'),
     path('item/<int:id>' , views.item.as_view() , name='item'),
+    path('category' , views.category.as_view() , name='category'),
     path('part' , views.part.as_view() , name='part'),
     path('part/<int:id>' , views.part.as_view() , name='part'),
     path('parts/<int:id>' , views.parts.as_view() , name='parts'),
@@ -23,4 +24,6 @@ urlpatterns = [
     path('itemparts/<int:id>' , views.itemparts.as_view() , name='itemparts'),
     path('pattern' , views.patterns.as_view() , name='pattern'),
     path('itemmaterials/<int:id>' , views.itemmaterials.as_view() , name='itemmaterials'),
+    path('itemmaterial' , views.itemmaterials.as_view() , name='itemmaterials'),
+
 ] 
