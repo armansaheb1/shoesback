@@ -25,7 +25,7 @@ SECRET_KEY = 'ix5n51=3top59^slsjl)o!l^0s9@o^9i)6tu*!5a3i3qs18a#-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['193.105.234.170:8001']
+ALLOWED_HOSTS = ['193.105.234.170']
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
