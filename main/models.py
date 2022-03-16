@@ -22,7 +22,7 @@ class Item(models.Model):
     def __str__(self):
         return self.name
     def get_pic(self):
-        return f'{ROOT}/media/{self.pic}/'
+        return f'{ROOT}/media/{self.pic}'
 
 
 
@@ -33,7 +33,7 @@ class Material(models.Model):
     def __str__(self):
         return self.name
     def get_map(self):
-        return f'{ROOT}/media/{self.bumpmap}/'
+        return f'{ROOT}/media/{self.bumpmap}'
 
 class Pattern(models.Model):
     material = models.ForeignKey(Material , related_name='patterns' , on_delete=models.CASCADE)
@@ -47,12 +47,12 @@ class Pattern(models.Model):
         return self.name + '-' + self.material.name + '-'
     def get_pic(self):
         if self.texture:
-            return f'{ROOT}/media/{self.texture}/'
+            return f'{ROOT}/media/{self.texture}'
         else:
             return False
     def get_icon(self):
         if self.icon:
-            return f'{ROOT}/media/{self.icon}/'
+            return f'{ROOT}/media/{self.icon}'
         else:
             return False
     def get_color(self):
@@ -76,7 +76,7 @@ class Part(models.Model):
         return f'{ROOT}/media/{self.model}'
     def get_map(self):
         if self.bumpmap:
-            return f'{ROOT}/media/{self.bumpmap}/'
+            return f'{ROOT}/media/{self.bumpmap}'
 
 
 class ItemMaterials(models.Model):
